@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/open-falcon/common/model"
+	"github.com/open-falcon/common/utils"
 	"github.com/open-falcon/judge/g"
 	"log"
 )
@@ -232,4 +233,24 @@ func sendEventIfNeed(historyData []*model.HistoryData, isTriggered bool, now int
 			sendEvent(event)
 		}
 	}
+}
+
+// 获取 `策略|表达式 - counter` 的当前状态
+func StrategyCounterStatus(id string, counter string) string {
+	ecid := fmt.Sprintf("s_%s_%s", id, utils.Md5(counter))
+	return getLastStatus(ecid)
+}
+
+func ExpressionCounterStatus(id string, counter string) string {
+	ecid := fmt.Sprintf("e_%s_%s", id, utils.Md5(counter))
+	return getLastStatus(ecid)
+}
+
+func getLastStatus(eventId string) string {
+	lastEvent, found := g.LastEvents.Get(eventId)
+	if !found {
+		return "Not Found"
+	}
+
+	return lastEvent.Status
 }

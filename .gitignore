@@ -33,4 +33,4 @@ _testmain.go
 /falcon-judge*
 /cfg.json
 /gitversion
-
+/test
